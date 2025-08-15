@@ -22,10 +22,11 @@ connectCloudinary();
 app.use(express.json());
 
 // --- Updated CORS Configuration ---
-const allowedOrigins = [process.env.FRONTEND_URL]; // Should be e.g. "https://joyful-belekoy-246da3.netlify.app"
+const allowedOrigins = [process.env.FRONTEND_URL]; // e.g. "https://joyful-belekoy-246da3.netlify.app"
+
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow requests with no origin (e.g., Postman, curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -33,7 +34,7 @@ app.use(cors({
       return callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
 }));
 // --- End CORS Configuration ---
 
