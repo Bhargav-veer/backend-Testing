@@ -19,7 +19,7 @@ connectCloudinary();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: process.env.FRONTEND_URL || '*', // Frontend URL from env
   credentials: true
 }));
 
@@ -29,8 +29,17 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 
+// Root route
 app.get('/', (req, res) => {
   res.send('API Working');
 });
 
-app.listen(port, () => console.log(`Server started on PORT : ${port}`));
+// Server listen
+app.listen(port, () => {
+  console.log(`✅ Server started on PORT: ${port}`);
+  if (process.env.FRONTEND_URL) {
+    console.log(`✅ CORS enabled for: ${process.env.FRONTEND_URL}`);
+  } else {
+    console.log('⚠ No FRONTEND_URL set — CORS open to all origins (*)');
+  }
+});
