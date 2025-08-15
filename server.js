@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
+
 import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
@@ -18,10 +20,22 @@ connectCloudinary();
 
 // Middleware
 app.use(express.json());
+
+// --- Updated CORS Configuration ---
+const allowedOrigins = [process.env.FRONTEND_URL]; // Should be e.g. "https://joyful-belekoy-246da3.netlify.app"
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*', // Frontend URL from env
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+// --- End CORS Configuration ---
 
 // API Endpoints
 app.use('/api/user', userRouter);
